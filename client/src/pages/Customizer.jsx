@@ -46,12 +46,33 @@ const Customizer = () => {
       />
 
       case 'aipicker':
-      return <AiPicker/>
+      return <AiPicker
+      prompt={prompt}
+      setPrompt={setPrompt}
+      generatingImg={generatingImg}
+      handleSubmit={handleSubmit}
+      />
 
       default:
         return null
     }
   }
+
+  const handleSubmit= async (type)=>{
+    if(!prompt) return alert('please enter a prompt')
+
+    try{
+      //call backend to generate image
+    }
+    catch(error){
+      alert(error)
+    }
+    finally{
+      setGeneratingImg(false)
+      setActiveEditorTab('')
+    }
+  }
+
 
   const handleDecal = (type,result) =>{
     const decalType = DecalTypes[type]
@@ -94,6 +115,7 @@ const Customizer = () => {
       setActiveEditorTab('')
     })
   }
+
 
   return (
     <AnimatePresence>
