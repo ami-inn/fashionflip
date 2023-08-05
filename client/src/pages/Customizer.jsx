@@ -38,7 +38,12 @@ const Customizer = () => {
       return <ColorPicker/>
 
       case 'filepicker':
-      return <FilePicker/>
+      return <FilePicker
+      file={file}
+      setFile={setFile}
+      readFile={readFile}
+
+      />
 
       case 'aipicker':
       return <AiPicker/>
@@ -46,6 +51,48 @@ const Customizer = () => {
       default:
         return null
     }
+  }
+
+  const handleDecal = (type,result) =>{
+    const decalType = DecalTypes[type]
+
+    state[decalType.stateProperty] = result
+
+    if(!activeFilterTab[decalType.FilterTab]){
+      handleActiveFilterTab(decalType.FilterTab)
+    }
+
+  }
+
+  const handleActiveFilterTab= (tabName)=>{
+    switch (tabName) {
+      case 'logoShirt':
+      state.isLogoTexture= !activeFilterTab[tabName]  
+      break;
+
+      case 'stylishShirt':
+      state.isFullTExture= !activeFilterTab[tabName]  
+      break;
+      
+        default:
+        state.isLogoTexture=true
+        state.isFullTExture=false
+    }
+
+    //after setting the state active filter tab is updated
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        [tabName]:!prevState[tabName],
+      }
+    })
+  }
+
+  const readFile = (type)=>{
+    reader(file).then((result)=>{
+      handleDecal(type,result)
+      setActiveEditorTab('')
+    })
   }
 
   return (
@@ -87,7 +134,13 @@ const Customizer = () => {
             {...slideAnimation("up")}
           >
             {FilterTabs.map((tab) => (
-              <Tab key={tab.name} isFilterTab isActiveTab='' tab={tab} handleClick={() => {}} />
+              <Tab
+               key={tab.name}
+               tab={tab}
+                isFilterTab
+                 isActiveTab={activeFilterTab[tab.name]} 
+                  handleClick={() => handleActiveFilterTab(tab.name)} 
+                  />
             ))}
           </motion.div>
         </>
